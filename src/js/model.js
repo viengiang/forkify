@@ -1,4 +1,4 @@
-import { getRecipe } from './heppers.js';
+import { getRecipe } from './helpers.js';
 import { API_URL, RES_PER_PAGE } from './config.js';
 
 export const state = {
