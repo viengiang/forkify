@@ -1,11 +1,19 @@
-import { getRecipe } from './helpers.js';
-import { API_URL } from './config.js';
+import { getRecipe } from './heppers.js';
+import { API_URL, RES_PER_PAGE } from './config.js';
+
 export const state = {
   recipe: {},
+  search: {
+    query: '',
+    results: [],
+    page: 1,
+    resultsPerPage: RES_PER_PAGE,
+  },
 };
 
-const createRecipe = function (data) {
+const createRecipeObj = function (data) {
   let { recipe } = data.data;
+
   return {
     id: recipe.id,
     cookingTime: recipe.cooking_time,
@@ -21,8 +29,37 @@ const createRecipe = function (data) {
 export const loadRecipe = async function (id) {
   try {
     const data = await getRecipe(`${API_URL}${id}`);
-    state.recipe = createRecipe(data);
+
+    state.recipe = createRecipeObj(data);
   } catch (err) {
     throw err;
   }
+};
+
+export const loadSearchResults = async function (query) {
+  try {
+    state.search.query = query;
+
+    const data = await getRecipe(`${API_URL}?search=${query}`);
+
+    state.search.results = data.data.recipes.map(recipe => {
+      return {
+        id: recipe.id,
+        image: recipe.image_url,
+        publisher: recipe.publisher,
+        title: recipe.title,
+      };
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const getSearchResultsPage = function (page = state.search.page) {
+  state.search.page = page;
+
+  const start = (page - 1) * state.search.resultsPerPage;
+  const end = page * state.search.resultsPerPage;
+
+  return state.search.results.slice(start, end);
 };
