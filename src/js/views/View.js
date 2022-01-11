@@ -9,7 +9,7 @@ class View {
 
   render(data) {
     if (!data || (Array.isArray(data) && data.length === 0))
-      return this.renderError();
+      throw new Error('No data to render');
     this._data = data;
     const markup = this._generateMarkup(this._data);
     this._clear();
