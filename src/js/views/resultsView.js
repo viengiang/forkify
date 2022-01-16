@@ -1,4 +1,5 @@
 import View from './View.js';
+import previewView from './previewView.js';
 
 class ResultsView extends View {
   _parentEl = document.querySelector('.results');
@@ -7,25 +8,7 @@ class ResultsView extends View {
 
   _generateMarkup() {
     return this._data
-      .map(preview => {
-        const id = window.location.hash.slice(1);
-
-        return `
-        <li class="preview">
-          <a class="preview__link ${
-            id === preview.id ? 'preview__link--active' : ''
-          }" href="#${preview.id}">
-            <figure class="preview__fig">
-              <img src="${preview.image}" alt="${preview.title}" />
-            </figure>
-            <div class="preview__data">
-              <h4 class="preview__title">${preview.title}</h4>
-              <p class="preview__publisher">${preview.publisher}</p>
-            </div>
-          </a>
-        </li>
-      `;
-      })
+      .map(preview => previewView.render(preview, false))
       .join('');
   }
 }
