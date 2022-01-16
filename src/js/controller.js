@@ -40,14 +40,16 @@ const controlSearchResults = async function () {
   try {
     resultsView.renderSpinner();
     // Get search results
-    await model.loadSearchResults(searchView.getQuery());
+    const query = searchView.getQuery();
+    if (!query) return;
+    // 2) Load search results
+    await model.loadSearchResults(query);
     // Render search results
     resultsView.render(model.getSearchResultsPage());
     // Render pagination buttons
     paginationView.render(model.state.search);
   } catch (err) {
     resultsView.renderError();
-    console.log(err);
   }
 };
 
